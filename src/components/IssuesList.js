@@ -1,53 +1,70 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { IssuesContext } from "../context/issuesContext";
+import { getOctokit } from "../shared/octokit";
 
-const IssuesList = ({ isList, getIssue }) => {
-  const [isTarget, setIsTarget] = useState(null);
-  const observer = useRef(
-    new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          getIssue();
-        }
-      },
-      { threshold: 1 }
-    )
-  );
-  useEffect(() => {
-    const currentTarget = isTarget;
-    const currentObserver = observer.current;
-    if (currentTarget) {
-      currentObserver.observe(currentTarget);
+const IssuesList = () => {
+  const state = useContext(IssuesContext);
+  const { issuesData, dispatch } = state;
+  const [isList, setIsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTarget, setIsTarget] = useState(false);
+  const [isTest, setIsTest] = useState(issuesData ? issuesData.issuesData : []);
+  const onIntersect = async ([entry], observer) => {
+    if (entry.isIntersecting && !isLoading) {
+      observer.unobserve(entry.target);
+      await nextIssueItem();
+      observer.observe(entry.target);
     }
-
-    return () => {
-      if (currentTarget) {
-        currentObserver.unobserve(currentTarget);
-      }
-    };
+  };
+  useEffect(() => {
+    let observer;
+    if (isTarget) {
+      observer = new IntersectionObserver(onIntersect, {
+        threshold: 0.7,
+      });
+      observer.observe(isTarget);
+    }
+    return () => observer && observer.disconnect();
   }, [isTarget]);
-  console.log(isTarget);
+  const loadingTerm = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  };
+  let num = 1;
+  const nextIssueItem = async () => {
+    setIsLoading(true);
+    loadingTerm();
+    const response = await getOctokit(num);
+    setIsTest(prev => prev.concat(response));
+    // dispatch({ type: "success", payload: response });
+    setIsLoading(false);
+    num++;
+  };
+  console.log(issuesData.issuesData);
   return (
-    <MainBox>
-      {isList?.map((i, idx) => (
-        <IssueBox key={idx}>
+    <>
+      {isTest?.map((i, idx) => (
+        <IssuesBox key={idx}>
           <span>{i.title}</span>
-        </IssueBox>
+          <span>{i.comments}</span>
+        </IssuesBox>
       ))}
-      <div ref={isTarget}>target</div>
-    </MainBox>
+      <ObserverBox ref={setIsTarget}>ha</ObserverBox>
+    </>
   );
 };
 
-const MainBox = styled.div`
-  width: 75%;
-  height: 90vh;
-  margin: auto;
+const IssuesBox = styled.div`
+  width: 100%;
+  height: 150px;
+  border: 1px solid blue;
+  margin-bottom: 25px;
 `;
-const IssueBox = styled.div`
-  width: 60%;
-  height: 100px;
-  border: 1px solid red;
+
+const ObserverBox = styled.div`
+  width: 100%;
+  height: 50px;
+  border: 1px solid black;
 `;
 
 export default IssuesList;
