@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { IssuesContext } from "../context/issuesContext";
 import { getOctokit } from "../shared/octokit";
+import Spinner from "./Spinner";
 
 const IssuesList = () => {
   const state = useContext(IssuesContext);
   const { issuesData, dispatch } = state;
-  const [isList, setIsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isTarget, setIsTarget] = useState(false);
   const [isTest, setIsTest] = useState(issuesData ? issuesData.issuesData : []);
@@ -49,7 +49,7 @@ const IssuesList = () => {
           <span>{i.comments}</span>
         </IssuesBox>
       ))}
-      <ObserverBox ref={setIsTarget}>ha</ObserverBox>
+      <ObserverBox ref={setIsTarget}>{isLoading && <Spinner />}</ObserverBox>
     </>
   );
 };
@@ -64,7 +64,9 @@ const IssuesBox = styled.div`
 const ObserverBox = styled.div`
   width: 100%;
   height: 50px;
-  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default IssuesList;
