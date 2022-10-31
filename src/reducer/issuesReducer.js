@@ -15,7 +15,6 @@ const reducer = (state = initialState, action) => {
       return { ...state, loading: true, success: false, failure: false };
     }
     case SUCCESS: {
-      console.log(action);
       return {
         ...state,
         loading: false,

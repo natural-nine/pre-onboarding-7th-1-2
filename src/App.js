@@ -13,7 +13,6 @@ function App() {
     dispatch({ type: "initial" });
     try {
       const response = await getOctokit(0);
-      console.log(response, "왜 여기선 찍히지 않는걸까요?");
       dispatch({ type: "success", payload: response });
     } catch (err) {
       dispatch({ type: "failure", error: err });
@@ -22,7 +21,6 @@ function App() {
   useEffect(() => {
     getIssuesData();
   }, []);
-  console.log(issuesData);
   return (
     <>
       <IssuesContext.Provider value={{ issuesData, dispatch }}>
