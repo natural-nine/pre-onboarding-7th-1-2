@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IssuesContext } from "../context/issuesContext";
 import { getOctokit } from "../shared/octokit";
 import Spinner from "./Spinner";
 
 const IssuesList = () => {
+  const navigate = useNavigate();
   const state = useContext(IssuesContext);
   const { issuesData, dispatch } = state;
   const [isLoading, setIsLoading] = useState(false);
@@ -40,14 +42,27 @@ const IssuesList = () => {
     setIsLoading(false);
     num++;
   };
-  console.log(issuesData.issuesData);
+  // console.log(isTest);
+  const detailClick = state => {
+    navigate("/detail", {
+      state: state,
+    });
+  };
   return (
     <>
       {isTest?.map((i, idx) => (
-        <IssuesBox key={idx}>
-          <span>{i.title}</span>
-          <span>{i.comments}</span>
-        </IssuesBox>
+        <>
+          <IssuesBox
+            key={idx}
+            onClick={() => {
+              detailClick(i);
+            }}
+          >
+            <span>{i.title}</span>
+            <span>{i.comments}</span>
+          </IssuesBox>
+          {idx === 4 && <h1>he</h1>}
+        </>
       ))}
       <ObserverBox ref={setIsTarget}>{isLoading && <Spinner />}</ObserverBox>
     </>
