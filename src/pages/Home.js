@@ -16,7 +16,6 @@ const Home = () => {
 const Wrap = styled.div`
   width: 90%;
   height: auto;
-  border: 1px solid red;
   margin: auto;
   padding: 30px 35px;
   display: flex;
