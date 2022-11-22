@@ -4,7 +4,7 @@ const octokit = new Octokit({
   auth: process.env.REACT_APP_API_KEY,
 });
 
-export const getOctokit = async page =>
+export const getOctokit = async (page: number) =>
   await octokit
     .request(`GET /repos/angular/angular-cli/issues`, {
       sort: "comments",

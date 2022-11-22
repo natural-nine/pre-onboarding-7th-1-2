@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import { IssuesContext } from "./context/issuesContext";
@@ -15,14 +15,14 @@ function App() {
       const response = await getOctokit(0);
       dispatch({ type: "success", payload: response });
     } catch (err) {
-      dispatch({ type: "failure", error: err });
+      dispatch({ type: "failure", payload: err });
     }
   };
   useEffect(() => {
     getIssuesData();
   }, []);
   return (
-    <>
+    <React.Fragment>
       <IssuesContext.Provider value={{ issuesData, dispatch }}>
         <Header />
         <Routes>
@@ -30,7 +30,7 @@ function App() {
           <Route path="/detail" element={<Detail />} />
         </Routes>
       </IssuesContext.Provider>
-    </>
+    </React.Fragment>
   );
 }
 

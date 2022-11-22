@@ -1,3 +1,5 @@
+import { InitialTypes, TypesActions } from "../types/contextTypes";
+
 export const initialState = {
   loading: false,
   issuesData: [],
@@ -9,12 +11,12 @@ const INITIAL = "initial";
 const SUCCESS = "success";
 const FAILURE = "failure";
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: InitialTypes, action: TypesActions) => {
   switch (action.type) {
-    case INITIAL: {
+    case "initial": {
       return { ...state, loading: true, success: false, failure: false };
     }
-    case SUCCESS: {
+    case "success": {
       return {
         ...state,
         loading: false,
@@ -23,7 +25,7 @@ const reducer = (state = initialState, action) => {
         issuesData: action.payload,
       };
     }
-    case FAILURE: {
+    case "failure": {
       return {
         ...state,
         loading: false,

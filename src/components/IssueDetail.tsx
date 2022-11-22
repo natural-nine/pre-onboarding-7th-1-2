@@ -1,9 +1,9 @@
-import React, { useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { FaRegCommentAlt } from "react-icons/fa";
 import remarkGfm from "remark-gfm";
 import { getCreateDate } from "../shared/date";
+import { DetailTypes } from "../types/contextTypes";
 
 const IssueDetail = ({
   number,
@@ -12,17 +12,7 @@ const IssueDetail = ({
   comments,
   user,
   markDown,
-}) => {
-  // const getCreateDate = useCallback(() => {
-  //   const date = new Date(created_at);
-  //   const year = date.getFullYear();
-  //   const month = date.getMonth() + 1;
-  //   const day = date.getDate();
-
-  //   return `${year}년 ${month}월 ${day}일`;
-  // }, [created_at]);
-
-  // const createdAt = getCreateDate();
+}: DetailTypes) => {
   return (
     <DetailBox>
       <TopBox>
