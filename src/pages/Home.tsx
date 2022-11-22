@@ -1,14 +1,10 @@
-import React, { useContext, useReducer, useState } from "react";
 import styled from "styled-components";
 import IssuesList from "../components/IssuesList";
-import { IssuesContext } from "../context/issuesContext";
 
 const Home = () => {
-  const state = useContext(IssuesContext);
-  const { issuesData } = state;
   return (
     <Wrap>
-      <IssuesList issuesData={issuesData} />
+      <IssuesList />
     </Wrap>
   );
 };

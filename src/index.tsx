@@ -4,12 +4,16 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import GlobalStyle from "./styles/global";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 root.render(
-  <BrowserRouter>
-    <GlobalStyle />
-    <App />
-  </BrowserRouter>
+  <React.Fragment>
+    <BrowserRouter>
+      <GlobalStyle />
+      <App />
+    </BrowserRouter>
+  </React.Fragment>
 );
 
 // If you want to start measuring performance in your app, pass a function

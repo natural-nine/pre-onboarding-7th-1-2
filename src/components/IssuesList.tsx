@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IssuesContext } from "../context/issuesContext";
@@ -6,15 +6,24 @@ import { getOctokit } from "../shared/octokit";
 import { FaRegCommentAlt } from "react-icons/fa";
 import Spinner from "./Spinner";
 import { getCreateDate } from "../shared/date";
+import { EntryTypes } from "../types/ScrollTypes";
+import { IssuesDataTypes } from "../types/contextTypes";
 
 const IssuesList = () => {
   const navigate = useNavigate();
   const state = useContext(IssuesContext);
-  const { issuesData, dispatch } = state;
-  const [isLoading, setIsLoading] = useState(false);
-  const [isTarget, setIsTarget] = useState(false);
-  const [isList, setIsList] = useState(issuesData ? issuesData.issuesData : []);
-  const onIntersect = async ([entry], observer) => {
+  const { issuesData } = state;
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [isTarget, setIsTarget] = useState<HTMLElement | null | undefined>(
+    null
+  );
+  const [isList, setIsList] = useState<IssuesDataTypes[]>(
+    issuesData ? issuesData.issuesData : []
+  );
+  const onIntersect = async (
+    [entry]: EntryTypes[],
+    observer: IntersectionObserver
+  ) => {
     if (entry.isIntersecting && !isLoading) {
       observer.unobserve(entry.target);
       await nextIssueItem();
@@ -22,7 +31,7 @@ const IssuesList = () => {
     }
   };
   useEffect(() => {
-    let observer;
+    let observer: IntersectionObserver;
     if (isTarget) {
       observer = new IntersectionObserver(onIntersect, {
         threshold: 0.7,
@@ -40,21 +49,20 @@ const IssuesList = () => {
     loadingTerm();
     const response = await getOctokit(num);
     setIsList(prev => prev.concat(response));
-    // dispatch({ type: "success", payload: response });
     setIsLoading(false);
     num++;
   };
-  const detailClick = state => {
+  const detailClick = (state: IssuesDataTypes) => {
     navigate("/detail", {
       state: state,
     });
   };
+
   return (
     <>
       {isList?.map((i, idx) => (
-        <>
+        <React.Fragment key={idx}>
           <IssuesBox
-            key={idx}
             onClick={() => {
               detailClick(i);
             }}
@@ -86,7 +94,7 @@ const IssuesList = () => {
               </ImgBox>
             </a>
           )}
-        </>
+        </React.Fragment>
       ))}
       <ObserverBox ref={setIsTarget}>{isLoading && <Spinner />}</ObserverBox>
     </>

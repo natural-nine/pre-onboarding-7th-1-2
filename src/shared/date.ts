@@ -1,4 +1,4 @@
-export const getCreateDate = created_at => {
+export const getCreateDate = (created_at: string) => {
   const date = new Date(created_at);
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
